@@ -27,5 +27,6 @@ typedef struct			s_stack
 void	add(t_stack *stack, t_stack_elem *elem);
 t_stack_elem	*create_elem(int number);
 void	terminate(char *str);
+void    swap(t_stack *stack, t_stack_elem *first, t_stack_elem *second);
 
 #endif

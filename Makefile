@@ -1,7 +1,7 @@
 NAME_PS = push_swap
 
 CC = gcc
-FLAGS = -Wall -Werror -Wextra -O3
+FLAGS = -Wall -Werror -Wextra -O3 -g
 LIBRARIES = -lft -L$(LIBFT_DIRECTORY)
 INCLUDES = -I$(HEADERS_DIRECTORY) -I$(LIBFT_HEADERS)
 
@@ -18,7 +18,8 @@ SOURCES_DIRECTORY = ./src/
 SOURCES_LIST = 	main.c
 	
 SOURCES_LIST_PS = stack.c\
-	utils.c
+	utils.c\
+	commands.c
 #SOURCES_LIST_CH = checker.c
 
 SOURCES = $(addprefix $(SOURCES_DIRECTORY), $(SOURCES_LIST))
