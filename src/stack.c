@@ -2,24 +2,30 @@
 
 void add(t_stack *stack, t_stack_elem *elem)
 {
-	t_stack_elem	*tail;
+	t_stack_elem	*tmp;
 
 	if(!stack || !elem)
 		return ;
 	if(!stack->head)
 	{
 		stack->head = elem;
-		stack->head->next = stack->head;
-		stack->head->previous = stack->head;
+		stack->head->next = NULL;
 	}
 	else
-		{
-			tail = stack->head->previous;
-			elem->previous = tail;
-			tail->next = elem;
-			elem->next = stack->head;
-			stack->head->previous = elem;
-		}
+	{
+	tmp = stack->head;
+	while (tmp->next)
+	{
+		tmp = tmp->next;
+	}
+	tmp->next = elem;
+	elem->next = NULL;
+		// {
+			
+		// 	stack->head = elem;
+		// 	stack->head->next = tmp;
+		// }
+	}
 		stack->size++;
 }
 
@@ -31,10 +37,9 @@ t_stack_elem *create_elem(int number)
     if(elem == NULL)
         terminate("malloc error");
     elem->number = number;
-    elem->index = -1;
+    //elem->index = -1;
     elem->next = NULL;
-    elem->previous = NULL;
-    elem->keep_in_stack = false;
+    //elem->keep_in_stack = false;
 
     return (elem);
     
