@@ -74,7 +74,7 @@ void handle_5_size_stack(t_stack	*stack_a, t_stack	*stack_b)
 
 bool sort(t_stack	*stack)
 {
-	t_stack_elem tmp;
+	t_stack_elem *tmp;
 
 	tmp = stack->head;
 	while (tmp->next != NULL)	
@@ -82,6 +82,7 @@ bool sort(t_stack	*stack)
 		if(tmp < tmp->next)
 		tmp = tmp->next;
 	}
+	return true;
 }
 
 void handle_middle_size_stack(t_stack	*stack_a, t_stack	*stack_b, int chunk_count, int list_count)
@@ -187,11 +188,30 @@ void handle_middle_size_stack(t_stack	*stack_a, t_stack	*stack_b, int chunk_coun
 	}
 	if(sort(stack_b))
 		push_x(stack_a, stack_b, pb);
+}
 
+void sort_middle_size_stack(t_stack	*stack_a, t_stack	*stack_b, int chunk_count, int list_count)
+{
+	int split;
+	t_stack_elem *tmp;
+	t_stack_elem *tmp2;
+
+	split = 1;
+	find_median(stack_a);
+	tmp = stack_a->head;
+	tmp2 = stack_b->head;
+	while (tmp)
+	{
+		push_median(stack_a, stack_b, split);
+		while (tmp2)
+		{
+			find_biggest_smallest(stack_b);
+			find_moves(stack_b);
+		}
+		
+
+	}
 	
-	
-
-
 }
 
 int	main(int argc, char **argv)
@@ -224,7 +244,7 @@ int	main(int argc, char **argv)
 	else if(stack_a->size == 5)
 		handle_5_size_stack(stack_a, stack_b);
 	else if(stack_a->size == 100)
-		handle_middle_size_stack(stack_a, stack_b, 5, 100);
+		sort_middle_size_stack(stack_a, stack_b, 5, 100);
 
 	printf("\nafter sorting\n");
 	i = 0;

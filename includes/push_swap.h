@@ -12,17 +12,32 @@ typedef struct			s_stack_elem
 	int					number;
 	//size_t				index;
 	//bool				keep_in_stack;
-	//struct s_stack_elem	*previous;
+	struct s_stack_elem	*prev;
 	struct s_stack_elem *next;
 }						t_stack_elem;
 
-typedef struct			s_stack
+typedef struct			s_data
 {
-	t_stack_elem		*head;
+	t_stack_elem		*a;
+	t_stack_elem		*b;
+
 	size_t				size;
-	size_t				pairs;
-	t_stack_elem		*markup_head;
-}						t_stack;
+	//size_t				pairs;
+	//t_stack_elem		*markup_head;
+	long				quarter;
+	long				median;
+	long				three_quarters;
+
+	long				biggest;
+	int					big_rotate;
+	int					big_r_rotate;
+	int					big_flag;
+
+	long				smallest;
+	int					small_rotate;
+	int					small_r_rotate;
+	int					small_flag;
+}						t_data;
 
 typedef struct s_chunk
 {

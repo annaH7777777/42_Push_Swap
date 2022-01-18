@@ -10,23 +10,25 @@ void add(t_stack *stack, t_stack_elem *elem)
 	{
 		stack->head = elem;
 		stack->head->next = NULL;
+		stack->head->prev = NULL;
 	}
 	else
 	{
-	tmp = stack->head;
-	while (tmp->next)
-	{
-		tmp = tmp->next;
-	}
-	tmp->next = elem;
-	elem->next = NULL;
+		tmp = stack->head;
+		tmp->prev = elem;
+		while (tmp->next)
+		{
+			tmp = tmp->next;
+		}
+		elem->prev = tmp;
+		tmp->next = elem;
+		tmp->next->next = NULL;
 		// {
-			
 		// 	stack->head = elem;
 		// 	stack->head->next = tmp;
 		// }
 	}
-		stack->size++;
+	stack->size++;
 }
 
 t_stack_elem *create_elem(int number)
