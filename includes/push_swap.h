@@ -37,6 +37,8 @@ typedef struct			s_data
 	int					small_rotate;
 	int					small_r_rotate;
 	int					small_flag;
+
+	int					after_rotate;
 }						t_data;
 
 typedef struct s_chunk
@@ -63,13 +65,19 @@ enum e_instructions
 };	
 
 
-void	add(t_stack *stack, t_stack_elem *elem);
+void	add(t_data *data, t_stack_elem *elem);
 t_stack_elem	*create_elem(int number);
 void	terminate(char *str);
-void    swap(t_stack *stack, t_stack_elem *first, t_stack_elem *second);
-void	rotate_x(t_stack **stack, enum e_instructions intruction);
-void	reverse_rotate_x(t_stack *stack, enum e_instructions intruction);
-void    swap_x(t_stack *stack, enum e_instructions intruction);
-void	push_x(t_stack *to, t_stack *from, enum e_instructions intruction);
-
+void    swap(t_stack_elem *first, t_stack_elem *second);
+void	rotate_x(t_data *data, char stack_name);
+void	reverse_rotate_x(t_data *data, char stack_name);
+void    swap_x(t_data *data, char stack_name);
+void	push_x(t_data *data, char stack_name);
+void	find_smallest(t_data *data, char stack_name);
+void	push_median(t_data *data, int split);
+void	find_median(t_data *data, char stack_name);
+void	find_smallest(t_data *data, char stack_name);
+void	reset_moves(t_data *data);
+void	find_biggest_smallest(t_data *data, char stack_name);
+void    find_moves(t_data *data, char stack_name);
 #endif

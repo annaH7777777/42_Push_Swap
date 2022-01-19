@@ -19,7 +19,10 @@ SOURCES_LIST = 	main.c
 	
 SOURCES_LIST_PS = stack.c\
 	utils.c\
-	commands.c
+	commands.c\
+	find_biggest_smallest.c\
+	find_median.c\
+	find_moves.c
 #SOURCES_LIST_CH = checker.c
 
 SOURCES = $(addprefix $(SOURCES_DIRECTORY), $(SOURCES_LIST))

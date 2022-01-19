@@ -1,20 +1,22 @@
 #include "push_swap.h"
 
-void add(t_stack *stack, t_stack_elem *elem)
+void add(t_data *data, t_stack_elem *elem)
 {
 	t_stack_elem	*tmp;
+	t_stack_elem	*stack;
 
+	stack = data->a;
 	if(!stack || !elem)
 		return ;
-	if(!stack->head)
+	if(!stack)
 	{
-		stack->head = elem;
-		stack->head->next = NULL;
-		stack->head->prev = NULL;
+		stack = elem;
+		stack->next = NULL;
+		stack->prev = NULL;
 	}
 	else
 	{
-		tmp = stack->head;
+		tmp = stack;
 		tmp->prev = elem;
 		while (tmp->next)
 		{
@@ -28,7 +30,7 @@ void add(t_stack *stack, t_stack_elem *elem)
 		// 	stack->head->next = tmp;
 		// }
 	}
-	stack->size++;
+	data->size++;
 }
 
 t_stack_elem *create_elem(int number)

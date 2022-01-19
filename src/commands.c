@@ -1,6 +1,6 @@
 #include <push_swap.h>
 
-void    swap(t_stack *stack, t_stack_elem *first, t_stack_elem *second)
+void    swap(t_stack_elem *first, t_stack_elem *second)
 {
 	t_stack_elem	*next;
 
@@ -10,119 +10,176 @@ void    swap(t_stack *stack, t_stack_elem *first, t_stack_elem *second)
 	//printf("\nfirst->next %d\n", first->next->number);
 	second->next = first;
 	//printf("\nsecond->next %d\n", second->next->number);
-	stack->head = second;
+	first = second;
 	//printf("\nstack->head %d\n", stack->head->number);
 }
 
-void	push(t_stack *stack, t_stack_elem *elem)
+void	push(t_data *data, char stack_name, t_stack_elem *elem)
 {
-	//t_stack_elem *tail;
+	t_stack_elem *stack;
 
+	if(stack_name == 'a')
+		stack = data->a;
+	else if(stack_name == 'b')
+		stack = data->b;
+	else
+		stack = NULL;
 	if(!stack || !elem)
 		return ;
-	if(!stack->head)
+	if(!elem)
 	{
-		stack->head = elem;
-		stack->head->next = stack->head;
+		stack = elem;
+		stack->next = stack;
 	}
 	else
 	{
-		elem->next = stack->head;
-		stack->head = elem;
+		elem->next = stack;
+		stack = elem;
 	}
-	stack->size++;
+	data->size++;
 }
 
-t_stack_elem	*pop(t_stack *stack)
+t_stack_elem	*pop(t_data *data, char stack_name)
 {
 	t_stack_elem *elem;
+	t_stack_elem *stack;
 	
 	elem = NULL;
-	if(!stack || stack->size < 1)
+	if(stack_name == 'a')
+		stack = data->a;
+	else if(stack_name == 'b')
+		stack = data->b;
+	else
+		stack = NULL;
+	if(!stack || data->size < 1)
 		return elem;
-	if(stack->size == 1)
+	if(data->size == 1)
 	{
-		elem = stack->head;
-		stack->head = NULL;
+		elem = stack;
+		stack = NULL;
 		elem->next = NULL;
 	}
 	else
 	{
-		elem = stack->head;
-		stack->head = stack->head->next;
+		elem = stack;
+		stack = stack->next;
 		elem->next = NULL;
 	}
-	stack->size--;
+	data->size--;
 	return(elem);
 }
 
 
-void    swap_x(t_stack *stack, enum e_instructions instruction)
+void    swap_x(t_data *data, char stack_name)
 {
-    if(stack->size < 2)
+    t_stack_elem *stack;
+
+	if(data->size < 2)
         return;
-    swap(stack, stack->head, stack->head->next);
-	if(instruction == sa)
+	if(stack_name == 'a')
+	{
+		stack = data->a;
 		printf("\nsa\n");
-	if(instruction == sb)
+	}
+	else if(stack_name == 'b')
+	{
+		stack = data->b;
 		printf("\nsb\n");
+	}
+	else
+		stack = NULL;
+    swap(stack, stack->next);
+		
 }
 
-void push_x(t_stack *to, t_stack *from, enum e_instructions instruction)
+void push_x(t_data *data, char stack_name)
 {
-    push(to, pop(from));
-	if(instruction == pa)
+    t_stack_elem *to;
+    t_stack_elem *from;
+	char pop_stack_name;
+	
+	if(stack_name == 'a')
+	{
+		to = data->a;
+		from = data->b;
+		pop_stack_name = 'b';
 		printf("\npa\n");
-	if(instruction == pb)
+	}
+	if(stack_name == 'b')
+	{
+		to = data->b;
+		from = data->a;
 		printf("\npb\n");
+		pop_stack_name = 'a';
+	}
+	push(data, stack_name, pop(data, pop_stack_name));
 }
 
-void rotate_x(t_stack **stack, enum e_instructions instruction)
+void rotate_x(t_data *data, char stack_name)
 {
 	int i;
 	t_stack_elem *tmp_head;
-	t_stack_elem *tmp;
+	//t_stack_elem *tmp;
+	t_stack_elem *stack;
 
+	if(stack_name == 'a')
+	{
+		stack = data->a;
+		printf("\nra\n");
+	}
+	else if(stack_name == 'b')
+	{
+		stack = data->b;
+		printf("\nrb\n");
+	}
+	else
+		stack = NULL;
 	if(!stack)
 		return ;
 	i = -1;
-	tmp_head = (*stack)->head;
-	tmp = (*stack)->head;
-	(*stack)->head = (*stack)->head->next;
+	tmp_head = stack;
+	//tmp = (*stack)->head;
+	stack = stack->next;
 	printf("\nrotate\n");
-	while (tmp->next != NULL)
+	while (stack->next != NULL)
 	{
-		tmp = tmp->next;
+		stack = stack->next;
 	}
 	printf("\nrotate 2\n");
-	tmp->next = tmp_head;
-	tmp->next->next = NULL;
-	if(instruction == ra)
-		printf("\nra\n");
-	if(instruction == rb)
-		printf("\nrb\n");
+	stack->next = tmp_head;
+	stack->next->next = NULL;
 }
 
-void reverse_rotate_x(t_stack *stack, enum e_instructions instruction)
+void reverse_rotate_x(t_data *data, char stack_name)
 {
 	int i;
 	t_stack_elem *tmp_head;
 	t_stack_elem *tmp;
+	t_stack_elem *stack;
+
+	if(stack_name == 'a')
+	{
+		stack = data->a;
+		printf("\nra\n");
+	}
+	else if(stack_name == 'b')
+	{
+		stack = data->b;
+		printf("\nrb\n");
+	}
+	else
+		stack = NULL;
 
 	if(!stack)
 		return ;
 	i = -1;
-	tmp_head = stack->head;
-	tmp = stack->head;
+	tmp_head = stack;
+	tmp = stack;
 	while (tmp->next != NULL)
 	{
 		tmp = tmp->next;
 	}
 	//TODO NULL pointer at the end of list
-	stack->head = tmp;
-	stack->head->next = tmp_head;
-	if(instruction == rra)
-		printf("\nrra\n");
-	if(instruction == rrb)
-		printf("\nrrb\n");
+	stack = tmp;
+	stack->next = tmp_head;
 }
