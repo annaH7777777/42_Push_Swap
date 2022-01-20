@@ -1,34 +1,32 @@
 #include "push_swap.h"
 
-void add(t_data *data, t_stack_elem *elem)
+void add(t_data *data, int num)
 {
-	t_stack_elem	*tmp;
-	t_stack_elem	*stack;
+	t_stack_elem	*elem;
+	t_stack_elem	**stack;
 
-	stack = data->a;
-	if(!stack || !elem)
-		return ;
-	if(!stack)
+	stack = &data->a;
+	// if(!elem)
+	// 	return ;
+	if(*stack)
 	{
-		stack = elem;
-		stack->next = NULL;
-		stack->prev = NULL;
+		elem = (t_stack_elem *) malloc (sizeof(t_stack_elem));
+		if(!elem)
+			terminate("malloc error");
+		elem->next = *stack;
+		elem->prev = (*stack)->prev;
+		(*stack)->prev = elem;
+		elem->prev->next = elem;
+		elem->number = num;
 	}
 	else
 	{
-		tmp = stack;
-		tmp->prev = elem;
-		while (tmp->next)
-		{
-			tmp = tmp->next;
-		}
-		elem->prev = tmp;
-		tmp->next = elem;
-		tmp->next->next = NULL;
-		// {
-		// 	stack->head = elem;
-		// 	stack->head->next = tmp;
-		// }
+		*stack = (t_stack_elem *) malloc(sizeof(t_stack_elem));
+		if(!(*stack))
+			terminate("malloc error");
+		(*stack)->next = (*stack);
+		(*stack)->prev = (*stack); //CHANGE??????
+		(*stack)->number = num;
 	}
 	data->size++;
 }
@@ -44,6 +42,7 @@ t_stack_elem *create_elem(int number)
     //elem->index = -1;
     elem->next = NULL;
     //elem->keep_in_stack = false;
+	elem->prev = NULL;
 
     return (elem);
     

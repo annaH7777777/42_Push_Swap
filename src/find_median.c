@@ -27,12 +27,12 @@ void find_median(t_data *data, char stack_name)
 	size_t i;
 	int quarter_len;
 	t_stack_elem *tmp;
-	t_stack_elem *stack;
+	t_stack_elem **stack;
 
 	if(stack_name == 'a')
-		stack = data->a;
+		stack = &data->a;
 	else if(stack_name == 'b')
-		stack = data->b;
+		stack = &data->b;
 	else
 		stack = NULL;
 	i = 0;
@@ -40,7 +40,7 @@ void find_median(t_data *data, char stack_name)
 	arr = malloc((data->size + 1) * sizeof(long));
 	if(!arr)
 		terminate("malloc error");
-	tmp = stack;
+	tmp = *stack;
 	while(i < data->size)
 	{
 		arr[i++] = tmp->number;
@@ -63,37 +63,38 @@ void reset_moves(t_data *data)
 	data->small_rotate = 0;
 	data->small_r_rotate = 0;
 	data->small_flag = 0;
+	data->after_rotate = 0;
 }
 
 void push_median(t_data *data, int split)
 {
-	t_stack_elem *tmp;
-	t_stack_elem *end;
+	//t_stack_elem *tmp;
+	t_stack_elem *stack_a_end;
 	t_stack_elem *stack_a;
 	t_stack_elem *stack_b;
 	int flag;
 
 	stack_a = data->a;
 	stack_b = data->b;
-	tmp = stack_a;
-	end = stack_a->prev;
+	//tmp = stack_a;
+	stack_a_end = stack_a->prev;
 	flag  = 0;
 	find_smallest(data, 'a');
 	while(1)
 	{
-		if(tmp == end)
+		if(stack_a == stack_a_end)
 			flag = 1;
-		if(split == 1 && tmp->number <= data->median)
+		if(split == 1 && stack_a->number <= data->median)
 			push_x(data, 'b');
-		else if(split == 2 && tmp->number > data->median)
+		else if(split == 2 && stack_a->number > data->median)
 			push_x(data, 'b');
-		else if(tmp->number == data->smallest)
+		else if(stack_a->number == data->smallest)
 			break;
 		else
 			rotate_x(data, 'a');
 		if(flag == 1)
 			break ;
-		tmp = stack_a;
+		stack_a = data->a;
 	}
 	reset_moves(data);
 }

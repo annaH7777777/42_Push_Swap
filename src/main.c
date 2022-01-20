@@ -1,15 +1,13 @@
 #include <push_swap.h>
 
-t_stack_elem *parse(int argc, char **argv, t_data	*data)
+void parse(int argc, char **argv, t_data	*data)
 {
 	int	i;
-	t_stack_elem	*stack;
 	char **numbers;
 
-	stack = malloc(sizeof(t_stack_elem));
 	data->size = 0;
-	if(stack == NULL)
-		terminate("malloc error");
+	data->a = NULL;
+	data->b = NULL;
 	i = 0;
 	if(argc == 2)
 	{
@@ -18,7 +16,7 @@ t_stack_elem *parse(int argc, char **argv, t_data	*data)
 		{
 			if(!ft_isdigit(numbers[i][0]))
 				terminate("not digit error");
-			add(data, create_elem(ft_atoi(numbers[i])));
+			add(data, ft_atoi(numbers[i]));
 			free(numbers[i]);
 		}
 		free(numbers);
@@ -30,10 +28,10 @@ t_stack_elem *parse(int argc, char **argv, t_data	*data)
 			if(!ft_isdigit(argv[i][0]))
 				terminate("not digit error");
 			//printf("\nsave digit %d\n", ft_atoi(argv[i]));
-			add(data, create_elem(ft_atoi(argv[i])));
+			add(data, ft_atoi(argv[i]));
 		}
 	}
-	return (stack);
+	//return (stack);
 }
 
 void handle_3_size_stack(t_data *data)
@@ -222,17 +220,20 @@ static void push_big_small(t_data *data, t_stack_elem *stack, t_stack_elem *stac
 void sort_middle_size_stack(t_data	*data) //insertion_solve_half
 {
 	int split;
-	t_stack_elem *tmp;
-	t_stack_elem *tmp2;
+	t_stack_elem *tmp_a;
+	// t_stack_elem *tmp_a_end;
+	t_stack_elem *tmp_b;
+	// t_stack_elem *tmp_b_end;
 
 	split = 1;
 	find_median(data, 'a');
-	tmp = data->a;
-	tmp2 = data->b;
-	while (tmp)
+	tmp_a = data->a;
+	// tmp_a_end = data->a->prev;
+	tmp_b = data->b;
+	while (tmp_a && tmp_a != data->a->prev)
 	{
 		push_median(data, split);
-		while (tmp2)
+		while (tmp_b && tmp_b != data->b->prev)
 		{
 			find_biggest_smallest(data, 'b');
 			find_moves(data, 'b');
@@ -240,7 +241,7 @@ void sort_middle_size_stack(t_data	*data) //insertion_solve_half
 				|| data->big_rotate >= 0 || data->big_r_rotate >= 0))
 			push_big_small(data, data->b, data->b->prev);
 		}
-		while(--data->after_rotate)
+		while(--data->after_rotate && data->after_rotate != -1)
 			rotate_x(data, 'a');
 		split++;
 		if(split == 3)
@@ -258,21 +259,23 @@ int	main(int argc, char **argv)
 	data = malloc(sizeof(t_data));
 	if(!data)
 		terminate("malloc error");
-	data->a = parse(argc, argv, data);
+
+	reset_moves(data);
+	parse(argc, argv, data);
 	size_t i = 0;
 	t_stack_elem *current = data->a;
-	while (i < data->size)
-	{
-		printf("\ndigit %d\n",current->number);
-		current = current->next;
-		i++;
-	}
+	// while (i < data->size)
+	// {
+	// 	printf("\ndigit %d\n",current->number);
+	// 	current = current->next;
+	// 	i++;
+	// }
 	//swap(stack_index, stack_index->head, stack_index->head->next);
 	// reverse_rotate_x(&stack_index);
 	
-	data->b = malloc(sizeof(t_stack_elem));
-	if(!data->b)
-		terminate("malloc error");
+	//data->b = (t_stack_elem *) malloc(sizeof(t_stack_elem));
+	// if(!data->b)
+	// 	terminate("malloc error");
 	if(data->size == 3)
 		handle_3_size_stack(data);
 	else if(data->size == 5)
@@ -280,15 +283,15 @@ int	main(int argc, char **argv)
 	else if(data->size == 100)
 		sort_middle_size_stack(data);
 
-	printf("\nafter sorting\n");
+	// printf("\nafter sorting\n");
 	i = 0;
 	current = data->a;
-	while (i < data->size)
-	{
-		printf("\ndigit %d\n",current->number);
-		current = current->next;
-		i++;
-	}
+	// while (i < data->size)
+	// {
+	// 	printf("\ndigit %d\n",current->number);
+	// 	current = current->next;
+	// 	i++;
+	// }
 	
 	return(0);
 }

@@ -67,7 +67,7 @@ void    find_moves_to_end(t_data *data, char stack_name, int flag)
     
 }
 
-void    find_moves_smallest(t_data *data, char stack_name)
+void     find_moves_smallest(t_data *data, char stack_name)
 {
     t_stack_elem *stack;
     int flag;

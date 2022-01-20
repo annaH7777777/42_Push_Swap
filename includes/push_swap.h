@@ -65,7 +65,7 @@ enum e_instructions
 };	
 
 
-void	add(t_data *data, t_stack_elem *elem);
+void	add(t_data *data, int number);
 t_stack_elem	*create_elem(int number);
 void	terminate(char *str);
 void    swap(t_stack_elem *first, t_stack_elem *second);
