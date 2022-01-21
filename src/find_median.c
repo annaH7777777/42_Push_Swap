@@ -63,20 +63,16 @@ void reset_moves(t_data *data)
 	data->small_rotate = 0;
 	data->small_r_rotate = 0;
 	data->small_flag = 0;
-	data->after_rotate = 0;
+	//data->after_rotate = 0;
 }
 
 void push_median(t_data *data, int split)
 {
-	//t_stack_elem *tmp;
-	t_stack_elem *stack_a_end;
-	t_stack_elem *stack_a;
-	t_stack_elem *stack_b;
-	int flag;
+	t_stack_elem	*stack_a;
+	t_stack_elem	*stack_a_end;
+	int				flag;
 
 	stack_a = data->a;
-	stack_b = data->b;
-	//tmp = stack_a;
 	stack_a_end = stack_a->prev;
 	flag  = 0;
 	find_smallest(data, 'a');
@@ -87,6 +83,39 @@ void push_median(t_data *data, int split)
 		if(split == 1 && stack_a->number <= data->median)
 			push_x(data, 'b');
 		else if(split == 2 && stack_a->number > data->median)
+			push_x(data, 'b');
+		else if(stack_a->number == data->smallest)
+			break;
+		else
+			rotate_x(data, 'a');
+		if(flag == 1)
+			break ;
+		stack_a = data->a;
+	}
+	reset_moves(data);
+}
+
+void push_quarters(t_data *data, int split)
+{
+	t_stack_elem	*stack_a;
+	t_stack_elem	*stack_a_end;
+	int				flag;
+
+	stack_a = data->a;
+	stack_a_end = data->a->prev;
+	flag = 0;
+	find_smallest(data, 'a');
+	while(1)
+	{
+		if(stack_a == stack_a_end)
+			flag = 1;
+		if(split == 1 && stack_a->number <= data->quarter)
+			push_x(data, 'b');
+		else if(split == 2 && stack_a->number <= data->median)
+			push_x(data, 'b');
+		else if(split == 3 && stack_a->number <= data->three_quarters)
+			push_x(data, 'b');
+		else if(split == 4 && stack_a->number > data->three_quarters)
 			push_x(data, 'b');
 		else if(stack_a->number == data->smallest)
 			break;

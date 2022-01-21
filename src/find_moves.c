@@ -127,13 +127,13 @@ void    find_moves(t_data *data, char stack_name)
         terminate("wrong stack");
     find_moves_smallest(data, 'b');
     find_moves_biggest(data, 'b');
-    if(data->big_rotate != -1 && data->big_rotate >= data->small_rotate && data->big_rotate >= data->small_rotate)
+    if(data->big_rotate != -1 && (data->big_rotate >= data->small_rotate && data->big_rotate >= data->small_r_rotate))
         data->big_rotate = -1;
-    else if(data->big_r_rotate != -1 && data->big_r_rotate >= data->small_rotate && data->big_r_rotate >= data->small_r_rotate)
+    else if(data->big_r_rotate != -1 && (data->big_r_rotate >= data->small_rotate && data->big_r_rotate >= data->small_r_rotate))
         data->big_r_rotate = -1;
-    else if(data->small_rotate != -1 && data->small_rotate >= data->big_rotate && data->small_rotate >= data->big_r_rotate)
+    else if(data->small_rotate != -1 && (data->small_rotate >= data->big_rotate && data->small_rotate >= data->big_r_rotate))
         data->small_rotate = -1;
-    else if(data->small_r_rotate != -1 && data->small_r_rotate >= data->big_rotate && data->small_r_rotate >= data->big_r_rotate)
+    else if(data->small_r_rotate != -1 && (data->small_r_rotate >= data->big_rotate && data->small_r_rotate >= data->big_r_rotate))
         data->small_r_rotate = -1;
     if(data->small_rotate != -1 || data->small_r_rotate != -1)
         data->small_flag = 1;

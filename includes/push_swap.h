@@ -80,4 +80,7 @@ void	find_smallest(t_data *data, char stack_name);
 void	reset_moves(t_data *data);
 void	find_biggest_smallest(t_data *data, char stack_name);
 void    find_moves(t_data *data, char stack_name);
+void	pop(t_data *data, char stack_name);
+void	push(t_data *data, char stack_name, int number);
+void	push_quarters(t_data *data, int split);
 #endif

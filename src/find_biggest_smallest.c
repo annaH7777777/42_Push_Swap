@@ -16,7 +16,7 @@ void find_smallest(t_data *data, char stack_name)
 
 	tmp = stack;
 	end = tmp->prev;
-	data->smallest = data->biggest;
+	data->smallest = tmp->number;
 	while (1)
 	{
 		if(tmp->number < data->smallest)
@@ -53,10 +53,10 @@ void find_biggest(t_data *data, char stack_name)
 			data->biggest = tmp->number;
 		if(tmp == end)
 		{
-			printf("\n%d %d tmp end\n", data->a->number, data->b->number);
+			//printf("\n%d %d tmp end\n", data->a->number, data->b->number);
 			break ;
 		}
-		printf("\nbla\n");
+		//printf("\nbla\n");
 		tmp = tmp->next;
 	}
 }

@@ -1,4 +1,22 @@
 #include <push_swap.h>
+#include <stdio.h>
+
+static int check_num_chars(char *number)
+{
+	int	i;
+
+	i = 0;
+	if(!ft_isdigit(number[i]) && number[i] != '-' && number[i] != '+')
+		return (-1);
+	i++;
+	while (number[i])
+	{
+		if(!ft_isdigit(number[i]))
+			return (-1);
+		i++;
+	}
+	return (0);
+}
 
 void parse(int argc, char **argv, t_data	*data)
 {
@@ -8,13 +26,14 @@ void parse(int argc, char **argv, t_data	*data)
 	data->size = 0;
 	data->a = NULL;
 	data->b = NULL;
-	i = 0;
+	i = -1;
 	if(argc == 2)
 	{
 		numbers = ft_split(argv[1], ' ');
-		while (numbers[i++])
+		while (numbers[++i])
 		{
-			if(!ft_isdigit(numbers[i][0]))
+			// printf("\n numbers[%d] = %s\n", i - 1, numbers[i]);
+			if(check_num_chars(numbers[i]) == -1)
 				terminate("not digit error");
 			add(data, ft_atoi(numbers[i]));
 			free(numbers[i]);
@@ -23,9 +42,10 @@ void parse(int argc, char **argv, t_data	*data)
 	}
 	else
 	{
+		i = 0;
 		while (++i < argc)
 		{
-			if(!ft_isdigit(argv[i][0]))
+			if(check_num_chars(argv[i]) == -1)
 				terminate("not digit error");
 			//printf("\nsave digit %d\n", ft_atoi(argv[i]));
 			add(data, ft_atoi(argv[i]));
@@ -34,7 +54,13 @@ void parse(int argc, char **argv, t_data	*data)
 	//return (stack);
 }
 
-void handle_3_size_stack(t_data *data)
+void sort_2_size_stack(t_data *data)
+{
+	if(data->a->number > data->a->next->number)
+		swap_x(data, 'a');
+}
+
+void sort_3_size_stack(t_data *data)
 {
 	int	a;
 	int	b;
@@ -62,118 +88,59 @@ void handle_3_size_stack(t_data *data)
 		reverse_rotate_x(data, 'a');
 }
 
-void handle_5_size_stack(t_data	*data)
+void sort_4_size_stack(t_data *data)
 {
+	t_stack_elem *stack_a;
+
+	stack_a = data->a;
+	find_biggest_smallest(data, 'a');
+	while (stack_a->number != data->smallest)
+	{
+		rotate_x(data, 'a');
+		stack_a = stack_a->next;
+	}
 	push_x(data, 'b');
-	push_x(data, 'b');
-	handle_3_size_stack(data);
-	//TODO return elements back from stack b in correct places
+	sort_3_size_stack(data);
+	push_x(data, 'a');
 }
 
-/*void handle_middle_size_stack(t_data *data, int chunk_count, int list_count)
+void sort_5_size_stack(t_data *data)
 {
-	int i;
-	t_chunk *chunk;
-	t_stack_elem *tmp;
-	int hold_first;
-	int hold_last;
-	int hold_first_pos;
-	int hold_last_pos;
-	int list_middle_pos;
-	int hold_first_oper_count;
-	enum e_instructions hold_first_oper_type;
-	int hold_last_oper_count;
-	enum e_instructions hold_last_oper_type;
+	t_stack_elem *stack_a;
+	t_stack_elem *stack_a_end;
+	int flag;
 
-	list_middle_pos = list_count / 2;
-	i = 0;
-	chunk = (t_chunk *) malloc(sizeof(t_chunk));
-	printf("\nchunk1\n");
-	chunk_count = 0;
-	//while(++i < chunk_count)
-	//{
-		chunk->start = i * 20;
-		chunk->end = i * 20 + 19;
-		//chunk = chunk->next;
-		//chunk = malloc(sizeof(t_chunk));
-	//}
-	printf("\nchunk2\n");
-	hold_first_pos = 0;
-	hold_last_pos = 0;
-	tmp = data->a;
-	i = 0;
-	while (tmp->next)
+	stack_a = data->a;
+	stack_a_end = data->a->prev;
+	find_median(data, 'a');
+	flag = 0;
+	while (flag != -1)
 	{
-		if(tmp->number > chunk->start && tmp->number < chunk->end)
-		{
-			hold_first = tmp->number;
-			hold_first_pos = i;
-			break;
-		}
-		i++;
-		tmp = tmp->next;
+		if(data->a == stack_a_end)
+			flag = -1;
+		if(data->a->number < data->median)
+			push_x(data, 'b');
+		else
+			rotate_x(data, 'a');
 	}
-	printf("\nchunk3\n");
-	while (tmp->next)
-	{
-		if(tmp->number > chunk->start && tmp->number < chunk->end)
-		{
-			hold_last = tmp->number;
-			hold_last_pos = i;
-		}
-		i++;
-		tmp = tmp->next;
-	}
-	printf("\nchunk4\n");
+	sort_3_size_stack(data);
+	push_x(data, 'a');
+	push_x(data, 'a');
+	if(data->a->number > data->a->next->number)
+		swap_x(data, 'a');
+}
 
-	if(hold_first_pos < list_middle_pos)
-	{
-		hold_first_oper_count = hold_first_pos;
-		hold_first_oper_type = ra;
-	}
-	else
-	{
-		hold_first_oper_count = list_count - hold_first_pos;
-		hold_first_oper_type = rra;
-	}
-
-	if(hold_last_pos < list_middle_pos)
-	{
-		hold_last_oper_count = hold_last_pos;
-		hold_last_oper_type = ra;
-	}
-	else
-	{
-		hold_last_oper_count = list_count - hold_last_pos;
-		hold_last_oper_type = rra;
-	}
-	i = -1;
-	if(hold_first_oper_count < hold_last_oper_count)
-	{
-		while (++i < hold_first_oper_count)
-		{
-			printf("\nhold first\n");
-			if(hold_first_oper_type == ra)
-				rotate_x(&stack_a, hold_first_oper_type);
-			else if(hold_first_oper_type == rra)
-				reverse_rotate_x(stack_b, hold_first_oper_type);
-			printf("\nhold first 2\n");
-		}
-	}
-	else
-	{
-		while (++i < hold_last_oper_count)
-		{
-			printf("\nhold last\n");
-			if(hold_last_oper_type == ra)
-				rotate_x(&stack_a, hold_last_oper_type);
-			else if(hold_last_oper_type == rra)
-				reverse_rotate_x(stack_b, hold_last_oper_type);
-		}
-	}
-	if(sort(stack_b))
-		push_x(stack_a, stack_b, pb);
-}*/
+void sort_small_stack(t_data	*data)
+{
+	if(data->size == 2)
+		sort_2_size_stack(data);
+	else if(data->size == 3)
+		sort_3_size_stack(data);
+	else if(data->size == 4)
+		sort_4_size_stack(data);
+	else if(data->size == 5)
+		sort_5_size_stack(data);
+}
 
 static void rotate_and_push_to_a(t_data *data)
 {
@@ -183,7 +150,7 @@ static void rotate_and_push_to_a(t_data *data)
 	else if(data->small_r_rotate >= 0)
 		while(data->small_r_rotate--)
 			reverse_rotate_x(data, 'b');
-	if(data->big_rotate >= 0)
+	else if(data->big_rotate >= 0)
 		while(data->big_rotate--)
 			rotate_x(data, 'b');
 	else if(data->big_r_rotate >= 0)
@@ -217,23 +184,16 @@ static void push_big_small(t_data *data, t_stack_elem *stack, t_stack_elem *stac
 	}
 }
 
-void sort_middle_size_stack(t_data	*data) //insertion_solve_half
+void sort_middle_stack(t_data	*data) //insertion_solve_half
 {
 	int split;
-	t_stack_elem *tmp_a;
-	// t_stack_elem *tmp_a_end;
-	t_stack_elem *tmp_b;
-	// t_stack_elem *tmp_b_end;
 
 	split = 1;
 	find_median(data, 'a');
-	tmp_a = data->a;
-	// tmp_a_end = data->a->prev;
-	tmp_b = data->b;
-	while (tmp_a && tmp_a != data->a->prev)
+	while (data->a) //&& tmp_a != data->a->prev
 	{
 		push_median(data, split);
-		while (tmp_b && tmp_b != data->b->prev)
+		while (data->b) //&& tmp_b != data->b->prev
 		{
 			find_biggest_smallest(data, 'b');
 			find_moves(data, 'b');
@@ -247,7 +207,31 @@ void sort_middle_size_stack(t_data	*data) //insertion_solve_half
 		if(split == 3)
 			break;
 	}
-	
+}
+
+void sort_big_stack(t_data *data)
+{
+	int split;
+
+	split = 1;
+	find_median(data, 'a');
+	while(data->a)
+	{
+		push_quarters(data, split);
+		while (data->b)
+		{
+			find_biggest_smallest(data, 'b');
+			find_moves(data, 'b');
+			if(data->b && (data->small_rotate >= 0 || data->small_r_rotate >= 0
+				|| data->big_rotate >= 0 || data->big_r_rotate >= 0))
+			push_big_small(data, data->b, data->b->prev);
+		}
+		while(--data->after_rotate && data->after_rotate != -1)
+			rotate_x(data, 'a');
+		split++;
+		if(split == 5)
+			break;
+	}
 }
 
 int	main(int argc, char **argv)
@@ -262,7 +246,7 @@ int	main(int argc, char **argv)
 
 	reset_moves(data);
 	parse(argc, argv, data);
-	size_t i = 0;
+	// size_t i = 0;
 	t_stack_elem *current = data->a;
 	// while (i < data->size)
 	// {
@@ -276,16 +260,40 @@ int	main(int argc, char **argv)
 	//data->b = (t_stack_elem *) malloc(sizeof(t_stack_elem));
 	// if(!data->b)
 	// 	terminate("malloc error");
-	if(data->size == 3)
-		handle_3_size_stack(data);
-	else if(data->size == 5)
-		handle_5_size_stack(data);
-	else if(data->size == 100)
-		sort_middle_size_stack(data);
+	// printf("############### stack a at start ############################\n");
+	// while (current && current != data->a->prev)
+	// {
+	// 	printf("%d ",current->number);
+	// 	current = current->next;
+	// }
+	// printf("%d \n",current->number);
+	// 	current = current->next;
+
+	// printf("\n");
+	
+	// if(data->size == 3)
+	// 	handle_3_size_stack(data);
+	if(data->size <= 5)
+		sort_small_stack(data);
+	else if(data->size <= 100)
+		sort_middle_stack(data);
+	else
+		sort_big_stack(data);
+	//push(data, 'b', 36);
+	current = data->a;
+	// printf("############### stack a at the end ############################\n");
+	// while (current && current != data->a->prev)
+	// {
+	// 	printf("%d ",current->number);
+	// 	current = current->next;
+	// }
+	// printf("%d ",current->number);
+	// 	current = current->next;
 
 	// printf("\nafter sorting\n");
-	i = 0;
-	current = data->a;
+	// i = 0;
+	// printf("\n stack = %d\n", data->b == NULL);
+	// current = data->a;
 	// while (i < data->size)
 	// {
 	// 	printf("\ndigit %d\n",current->number);

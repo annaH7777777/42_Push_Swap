@@ -60,9 +60,11 @@ void	pop(t_data *data, char stack_name)
 		else
 		{
 			tmp = *top;
+			(*top)->prev->next = (*top)->next;
+			(*top)->next->prev = (*top)->prev;
+			// (*top)->prev = tmp->prev;
 			*top = (*top)->next;
-			tmp->prev->next = *top;
-			(*top)->prev = tmp->prev;
+			// printf("\ntop = %d\n", (*top)->number);
 			free(tmp);
 		}
 	}
@@ -143,6 +145,7 @@ void rotate_x(t_data *data, char stack_name)
 	if(!*stack)
 		return ;
 	i = -1;
+	// printf("\n stack = %d \n", stack == NULL);
 	tmp_head = *stack;
 	tmp = *stack;
 	//tmp = (*stack)->head;
