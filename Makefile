@@ -21,8 +21,12 @@ SOURCES_LIST_PS = stack.c\
 	utils.c\
 	commands.c\
 	find_biggest_smallest.c\
-	find_median.c\
-	find_moves.c
+	find_median_moves.c\
+	find_moves_utils.c\
+	algorithm.c\
+	error_checks.c\
+	push_quarters.c\
+	sort_small_stack.c
 #SOURCES_LIST_CH = checker.c
 
 SOURCES = $(addprefix $(SOURCES_DIRECTORY), $(SOURCES_LIST))

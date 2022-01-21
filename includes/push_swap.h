@@ -6,7 +6,7 @@
 /*   By: annharut <annharut@student.42yerevan.am    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 21:11:26 by annharut          #+#    #+#             */
-/*   Updated: 2022/01/21 21:16:49 by annharut         ###   ########.fr       */
+/*   Updated: 2022/01/21 22:44:15 by annharut         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,6 @@ typedef struct s_data
 	long				quarter;
 	long				median;
 	long				three_quarters;
-	long				half_quarter;
-	long				one_and_half_quarter;
-	long				two_and_half_quarter;
-	long				three_and_half_quarter;
 
 	long				biggest;
 	int					big_rotate;
@@ -68,4 +64,13 @@ void	find_moves(t_data *data, char stack_name);
 void	pop(t_data *data, char stack_name);
 void	push(t_data *data, char stack_name, int number);
 void	push_quarters(t_data *data, int split);
+void	check_errors(char *number);
+void	push_big_small(t_data *data, t_stack_elem *stack,
+			t_stack_elem *stack_end);
+void	check_dublicates(t_data *data);
+void	sort_small_stack(t_data	*data);
+void	sort_array(long *arr, int len);
+void	find_moves_smallest(t_data *data, char stack_name);
+void	find_moves_biggest(t_data *data, char stack_name);
+void	push_fourth_quarter(t_data *data);
 #endif
