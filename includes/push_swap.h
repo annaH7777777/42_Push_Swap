@@ -27,6 +27,10 @@ typedef struct			s_data
 	long				quarter;
 	long				median;
 	long				three_quarters;
+	long				half_quarter;
+	long				one_and_half_quarter;
+	long				two_and_half_quarter;
+	long				three_and_half_quarter;
 
 	long				biggest;
 	int					big_rotate;

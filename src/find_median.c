@@ -50,6 +50,10 @@ void find_median(t_data *data, char stack_name)
 	data->quarter = arr[quarter_len];
 	data->median = arr[quarter_len * 2];
 	data->three_quarters = arr[quarter_len * 3];
+	data->half_quarter = arr[quarter_len / 2];
+	data->one_and_half_quarter = arr[quarter_len * 3 / 2];
+	data->two_and_half_quarter = arr[quarter_len * 5 / 2];
+	data->three_and_half_quarter = arr[quarter_len * 7 / 2];
 	free(arr);
 }
 
@@ -95,6 +99,34 @@ void push_median(t_data *data, int split)
 	reset_moves(data);
 }
 
+static void	push_first_quarter(t_data *data)
+{
+	if (data->b && data->b->number > data->quarter / 2) 
+		rotate_x(data, 'b');
+	push_x(data, 'b');
+}
+
+static void	push_second_quarter(t_data *data)
+{
+	if (data->b && data->b->number > (data->median / 4) * 3) 
+		rotate_x(data, 'b');
+	push_x(data, 'b');
+}
+
+static void	push_third_quarter(t_data *data)
+{
+	if (data->b && data->b->number > (data->median / 4) * 5) 
+		rotate_x(data, 'b');
+	push_x(data, 'b');
+}
+
+static void	push_fourth_quarter(t_data *data)
+{
+	if (data->b && data->b->number > (data->median / 4) * 7) 
+		rotate_x(data, 'b');
+	push_x(data, 'b');
+}
+
 void push_quarters(t_data *data, int split)
 {
 	t_stack_elem	*stack_a;
@@ -104,25 +136,23 @@ void push_quarters(t_data *data, int split)
 	stack_a = data->a;
 	stack_a_end = data->a->prev;
 	flag = 0;
-	find_smallest(data, 'a');
-	while(1)
+	find_biggest_smallest(data, 'a');
+	while(flag != 1)
 	{
 		if(stack_a == stack_a_end)
 			flag = 1;
 		if(split == 1 && stack_a->number <= data->quarter)
-			push_x(data, 'b');
-		else if(split == 2 && stack_a->number <= data->median)
-			push_x(data, 'b');
-		else if(split == 3 && stack_a->number <= data->three_quarters)
-			push_x(data, 'b');
+			push_first_quarter(data);
+		else if(split == 2 && stack_a->number > data->quarter && stack_a->number <= data->median)
+			push_second_quarter(data);
+		else if(split == 3 && stack_a->number > data->median && stack_a->number <= data->three_quarters)
+			push_third_quarter(data);
 		else if(split == 4 && stack_a->number > data->three_quarters)
-			push_x(data, 'b');
-		else if(stack_a->number == data->smallest)
-			break;
+			push_fourth_quarter(data);
+		else if(split ==4 && stack_a->number == data->smallest)
+		 	break;
 		else
 			rotate_x(data, 'a');
-		if(flag == 1)
-			break ;
 		stack_a = data->a;
 	}
 	reset_moves(data);

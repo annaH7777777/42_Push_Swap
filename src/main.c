@@ -18,6 +18,36 @@ static int check_num_chars(char *number)
 	return (0);
 }
 
+
+int	atoi_error(char *str)
+{
+	int i;
+	int j;
+	int sign_min;
+	long sum;
+
+	i = 0;
+	j = 0;
+	sign_min = 1;
+	sum = 0;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n'
+			|| str[i] == '\f' || str[i] == '\r' || str[i] == '\v')
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign_min = -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		sum = sum * 10 + str[i] - '0';
+		i++;
+	}
+	sum *= sign_min;
+	return (sum <= (long)2147483647 && sum >= (long)(-2147483648));
+}
+
 void parse(int argc, char **argv, t_data	*data)
 {
 	int	i;
@@ -35,6 +65,8 @@ void parse(int argc, char **argv, t_data	*data)
 			// printf("\n numbers[%d] = %s\n", i - 1, numbers[i]);
 			if(check_num_chars(numbers[i]) == -1)
 				terminate("not digit error");
+			if(!atoi_error(numbers[i]))
+				terminate("int limit error");
 			add(data, ft_atoi(numbers[i]));
 			free(numbers[i]);
 		}
@@ -48,6 +80,8 @@ void parse(int argc, char **argv, t_data	*data)
 			if(check_num_chars(argv[i]) == -1)
 				terminate("not digit error");
 			//printf("\nsave digit %d\n", ft_atoi(argv[i]));
+			if(!atoi_error(argv[i]))
+				terminate("int limit error");
 			add(data, ft_atoi(argv[i]));
 		}
 	}
@@ -234,6 +268,45 @@ void sort_big_stack(t_data *data)
 	}
 }
 
+void check_dublicates(t_data *data)
+{
+	t_stack_elem		*elem;
+	t_stack_elem		*elem_2;
+
+	elem = data->a;
+	while (elem != data->a->prev)
+	{
+		elem_2 = elem->next;
+		while (elem_2 != data->a)
+		{
+			if (elem->number == elem_2->number)
+				terminate("dublicate numbers");
+			elem_2 = elem_2->next;
+		}
+		elem = elem->next;
+	}
+}
+
+int check_is_sorted(t_data *data)
+{
+	t_stack_elem *stack;
+
+	stack = data->a;
+	if (stack)
+	{
+		if(stack->number > stack->next->number)
+			return (0);
+		stack = stack->next;
+	}
+	while (stack->next != data->a)
+	{
+		if(stack->number > stack->next->number)
+			return (0);
+		stack = stack->next;
+	}
+	return (1);
+}
+
 int	main(int argc, char **argv)
 {
 	t_data	*data;
@@ -243,9 +316,10 @@ int	main(int argc, char **argv)
 	data = malloc(sizeof(t_data));
 	if(!data)
 		terminate("malloc error");
-
+	//printf("pid %d", getpid());
 	reset_moves(data);
 	parse(argc, argv, data);
+	check_dublicates(data);
 	// size_t i = 0;
 	t_stack_elem *current = data->a;
 	// while (i < data->size)
@@ -261,7 +335,7 @@ int	main(int argc, char **argv)
 	// if(!data->b)
 	// 	terminate("malloc error");
 	// printf("############### stack a at start ############################\n");
-	// while (current && current != data->a->prev)
+	// while (current && current != data->a)
 	// {
 	// 	printf("%d ",current->number);
 	// 	current = current->next;
@@ -273,6 +347,9 @@ int	main(int argc, char **argv)
 	
 	// if(data->size == 3)
 	// 	handle_3_size_stack(data);
+	// printf("\ncheck = %d\n", check_is_sorted(data));
+	if(check_is_sorted(data))
+		return 0;
 	if(data->size <= 5)
 		sort_small_stack(data);
 	else if(data->size <= 100)
@@ -301,5 +378,6 @@ int	main(int argc, char **argv)
 	// 	i++;
 	// }
 	
+	// sleep(1000);
 	return(0);
 }
