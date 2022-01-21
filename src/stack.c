@@ -1,17 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: annharut <annharut@student.42yerevan.am    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/21 19:37:20 by annharut          #+#    #+#             */
+/*   Updated: 2022/01/21 21:15:59 by annharut         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
-void add(t_data *data, int num)
+void	add(t_data *data, int num)
 {
 	t_stack_elem	*elem;
 	t_stack_elem	**stack;
 
 	stack = &data->a;
-	// if(!elem)
-	// 	return ;
-	if(*stack)
+	if (*stack)
 	{
 		elem = (t_stack_elem *) malloc (sizeof(t_stack_elem));
-		if(!elem)
+		if (!elem)
 			terminate("malloc error");
 		elem->next = *stack;
 		elem->prev = (*stack)->prev;
@@ -22,28 +32,11 @@ void add(t_data *data, int num)
 	else
 	{
 		*stack = (t_stack_elem *) malloc(sizeof(t_stack_elem));
-		if(!(*stack))
+		if (!(*stack))
 			terminate("malloc error");
 		(*stack)->next = (*stack);
-		(*stack)->prev = (*stack); //CHANGE??????
+		(*stack)->prev = (*stack);
 		(*stack)->number = num;
 	}
 	data->size++;
-}
-
-t_stack_elem *create_elem(int number)
-{
-    t_stack_elem *elem;
-
-    elem = malloc(sizeof(t_stack_elem));
-    if(elem == NULL)
-        terminate("malloc error");
-    elem->number = number;
-    //elem->index = -1;
-    elem->next = NULL;
-    //elem->keep_in_stack = false;
-	elem->prev = NULL;
-
-    return (elem);
-    
 }

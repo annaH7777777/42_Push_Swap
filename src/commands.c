@@ -1,17 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   commands.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: annharut <annharut@student.42yerevan.am    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/21 19:36:44 by annharut          #+#    #+#             */
+/*   Updated: 2022/01/21 19:54:13 by annharut         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <push_swap.h>
 
-void    swap(t_stack_elem *first, t_stack_elem *second)
+void	swap(t_stack_elem *first, t_stack_elem *second)
 {
 	t_stack_elem	*next;
 
 	next = second->next;
-	//printf("\nnext %d\n", next->number);
 	first->next = next;
-	//printf("\nfirst->next %d\n", first->next->number);
 	second->next = first;
-	//printf("\nsecond->next %d\n", second->next->number);
 	first = second;
-	//printf("\nstack->head %d\n", stack->head->number);
 }
 
 void	push(t_data *data, char stack_name, int number)
@@ -19,10 +27,14 @@ void	push(t_data *data, char stack_name, int number)
 	t_stack_elem		**top;
 	t_stack_elem		*tmp;
 
-	top = (stack_name == 'a') ? &data->a : &data->b;
+	if (stack_name == 'a')
+		top = &data->a;
+	else
+		top = &data->b;
 	if (*top)
 	{
-		if (!(tmp = (t_stack_elem *)malloc(sizeof(t_stack_elem))))
+		tmp = (t_stack_elem *)malloc(sizeof(t_stack_elem));
+		if (!tmp)
 			terminate("malloc error");
 		tmp->next = *top;
 		tmp->prev = (*top)->prev;
@@ -33,7 +45,8 @@ void	push(t_data *data, char stack_name, int number)
 	}
 	else
 	{
-		if (!(*top = (t_stack_elem *)malloc(sizeof(t_stack_elem))))
+		*top = (t_stack_elem *)malloc(sizeof(t_stack_elem));
+		if (!(*top))
 			terminate("malloc error");
 		(*top)->next = *top;
 		(*top)->prev = *top;
@@ -62,45 +75,41 @@ void	pop(t_data *data, char stack_name)
 			tmp = *top;
 			(*top)->prev->next = (*top)->next;
 			(*top)->next->prev = (*top)->prev;
-			// (*top)->prev = tmp->prev;
 			*top = (*top)->next;
-			// printf("\ntop = %d\n", (*top)->number);
 			free(tmp);
 		}
 	}
 }
 
-
-void    swap_x(t_data *data, char stack_name)
+void	swap_x(t_data *data, char stack_name)
 {
-    t_stack_elem **stack;
+	t_stack_elem	**stack;
 
-	if(data->size < 2)
-        return;
-	if(stack_name == 'a')
+	if (data->size < 2)
+		return ;
+	if (stack_name == 'a')
 	{
 		stack = &data->a;
 		printf("sa\n");
 	}
-	else if(stack_name == 'b')
+	else if (stack_name == 'b')
 	{
 		stack = &data->b;
 		printf("sb\n");
 	}
 	else
 		stack = NULL;
-    swap(*stack, (*stack)->next);
-		
+	swap(*stack, (*stack)->next);
 }
 
-void push_x(t_data *data, char stack_name)
+void	push_x(t_data *data, char stack_name)
 {
-    t_stack_elem **to;
-    t_stack_elem **from;
-	char pop_stack_name;
-	int num;
-	
-	if(stack_name == 'a')
+	t_stack_elem	**to;
+	t_stack_elem	**from;
+	char			pop_stack_name;
+	int				num;
+
+	if (stack_name == 'a')
 	{
 		to = &data->a;
 		from = &data->b;
@@ -108,7 +117,7 @@ void push_x(t_data *data, char stack_name)
 		num = data->b->number;
 		printf("pa\n");
 	}
-	if(stack_name == 'b')
+	if (stack_name == 'b')
 	{
 		to = &data->b;
 		from = &data->a;
@@ -120,21 +129,20 @@ void push_x(t_data *data, char stack_name)
 	push(data, stack_name, num);
 }
 
-void rotate_x(t_data *data, char stack_name)
+void	rotate_x(t_data *data, char stack_name)
 {
-	int i;
-	t_stack_elem *tmp_head;
-	t_stack_elem *end;
-	t_stack_elem *tmp;
-	t_stack_elem **stack;
+	t_stack_elem	*tmp_head;
+	t_stack_elem	*end;
+	t_stack_elem	*tmp;
+	t_stack_elem	**stack;
 
-	if(stack_name == 'a')
+	if (stack_name == 'a')
 	{
 		stack = &data->a;
 		end = data->a->prev;
 		printf("ra\n");
 	}
-	else if(stack_name == 'b')
+	else if (stack_name == 'b')
 	{
 		stack = &data->b;
 		end = data->b->prev;
@@ -142,60 +150,34 @@ void rotate_x(t_data *data, char stack_name)
 	}
 	else
 		stack = NULL;
-	if(!*stack)
+	if (!*stack)
 		return ;
-	i = -1;
-	// printf("\n stack = %d \n", stack == NULL);
 	tmp_head = *stack;
 	tmp = *stack;
-	//tmp = (*stack)->head;
-	//*stack = (*stack)->next;
-	//printf("\nrotate\n");
-	// while (1)
-	// {
-	// 	tmp = tmp->next;
-	// 	if(tmp == end)
-	// 		break;
-	// }
-	// //printf("\nrotate 2\n");
-	// tmp->next = tmp_head;
-	// tmp->next->next = NULL;
 	(*stack) = (*stack)->next;
 }
 
-void reverse_rotate_x(t_data *data, char stack_name)
+void	reverse_rotate_x(t_data *data, char stack_name)
 {
-	int i;
-	t_stack_elem *tmp_head;
-	t_stack_elem *tmp;
-	t_stack_elem **stack;
+	t_stack_elem	*tmp_head;
+	t_stack_elem	*tmp;
+	t_stack_elem	**stack;
 
-	if(stack_name == 'a')
+	if (stack_name == 'a')
 	{
 		stack = &data->a;
 		printf("rra\n");
 	}
-	else if(stack_name == 'b')
+	else if (stack_name == 'b')
 	{
 		stack = &data->b;
 		printf("rrb\n");
 	}
 	else
 		stack = NULL;
-
-	if(!*stack)
+	if (!*stack)
 		return ;
-	i = -1;
 	tmp_head = *stack;
 	tmp = *stack;
-	// while (tmp->next != NULL)
-	// {
-	// 	tmp = tmp->next;
-	// }
-	// //TODO NULL pointer at the end of list
-	// *stack = tmp;
-	// (*stack)->next = tmp_head;
-	// //(*stack)->prev = 
-	// (*stack)->prev->next = NULL;
 	(*stack) = (*stack)->prev;
 }

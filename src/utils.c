@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: annharut <annharut@student.42yerevan.am    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/21 19:37:24 by annharut          #+#    #+#             */
+/*   Updated: 2022/01/21 21:10:34 by annharut         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
-void    terminate(char *str)
+void	terminate(char *str)
 {
 	printf("%s", str);
-	//write(1, &str, ft_strlen(str));
 	exit(1);
 }

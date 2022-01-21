@@ -1,0 +1,8 @@
+// printf("############### stack a at start ############################\n");
+	// while (current && current != data->a)
+	// {
+	// 	printf("%d ",current->number);
+	// 	current = current->next;
+	// }
+	// printf("%d \n",current->number);
+	// 	current = current->next;
